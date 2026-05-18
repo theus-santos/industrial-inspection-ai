@@ -133,6 +133,21 @@ export class PhotosComponent {
     return this.photos.some(p => p.uploading || p.analyzing);
   }
 
+  onDrop(event: DragEvent): void {
+    const files = event.dataTransfer?.files;
+    if (!files) return;
+    const slots = this.MAX_PHOTOS - this.photos.length;
+    if (slots <= 0) {
+      this.snack.open(`Limite de ${this.MAX_PHOTOS} fotos atingido.`, 'Fechar', { duration: 3000, panelClass: 'snack-error' });
+      return;
+    }
+    Array.from(files).filter(f => f.type.startsWith('image/')).slice(0, slots).forEach(file => {
+      const entry: PhotoEntry = { file, preview: URL.createObjectURL(file), photoId: null, uploading: true, analyzing: false, analysis: null, error: '' };
+      this.photos.push(entry);
+      this.uploadAndAnalyze(entry);
+    });
+  }
+
   onDropZoneHover(element: HTMLElement, isEnter: boolean): void {
     if (isEnter) {
       element.style.borderColor = '#2196f3';
