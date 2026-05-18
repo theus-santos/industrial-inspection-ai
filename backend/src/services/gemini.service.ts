@@ -35,8 +35,12 @@ export class GeminiService {
       { inlineData: { mimeType, data } },
     ]);
     const text = result.response.text();
-    const json = JSON.parse(text.replace(/```json\n?/g, '').replace(/```\n?/g, '').trim());
-    return { defects: json.defects ?? [], summary: json.summary ?? '' };
+    try {
+      const json = JSON.parse(text.replace(/```json\n?/g, '').replace(/```\n?/g, '').trim());
+      return { defects: json.defects ?? [], summary: json.summary ?? '' };
+    } catch {
+      return { defects: [], summary: 'Nao foi possivel analisar a imagem. Verifique se a foto e de um equipamento industrial.' };
+    }
   }
 
   private async fetchImageAsBase64(url: string): Promise<{ data: string; mimeType: string }> {
