@@ -6,9 +6,9 @@ import { DefectAnalysis, Photo } from '../shared/types';
 export class PhotoRepo {
   constructor(private readonly table: string) {}
 
-  async createPhotoRecord(input: { inspectionId: string; s3Key: string }): Promise<Photo> {
+  async createPhotoRecord(input: { id: string; inspectionId: string; s3Key: string }): Promise<Photo> {
     const photo: Photo = {
-      id: uuidv4(),
+      id: input.id,
       inspectionId: input.inspectionId,
       s3Key: input.s3Key,
       createdAt: new Date().toISOString(),

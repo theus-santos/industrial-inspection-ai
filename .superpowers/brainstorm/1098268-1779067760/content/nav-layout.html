@@ -1,0 +1,78 @@
+<h2>Qual layout de navegação?</h2>
+<p class="subtitle">Escolha o estilo da estrutura principal do app</p>
+
+<div class="cards">
+
+  <div class="card" data-choice="a" onclick="toggleSelect(this)">
+    <div class="card-image">
+      <div style="background:#1a237e;color:white;padding:10px 16px;display:flex;align-items:center;justify-content:space-between;font-size:13px;font-weight:600;">
+        <span>⚙️ Inspeção Industrial IA</span>
+        <span style="font-size:11px;opacity:0.8;">João Silva &nbsp; [Sair]</span>
+      </div>
+      <div style="display:flex;background:#f5f5f5;height:160px;">
+        <div style="flex:1;padding:16px;">
+          <div style="background:white;border-radius:4px;padding:12px;box-shadow:0 1px 3px rgba(0,0,0,.15);">
+            <div style="font-size:11px;font-weight:700;color:#333;margin-bottom:8px;">EQUIPAMENTOS</div>
+            <div style="display:flex;gap:8px;flex-wrap:wrap;">
+              <div style="background:#e3f2fd;border-radius:4px;padding:6px 10px;font-size:10px;">Caldeira B-01</div>
+              <div style="background:#e3f2fd;border-radius:4px;padding:6px 10px;font-size:10px;">Compressor K-12</div>
+              <div style="background:#e3f2fd;border-radius:4px;padding:6px 10px;font-size:10px;">Bomba D-04</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="card-body">
+      <h3>A — Top Toolbar</h3>
+      <p>Barra no topo, conteúdo abaixo. Simple e familiar. Menos espaço vertical no mobile.</p>
+    </div>
+  </div>
+
+  <div class="card" data-choice="b" onclick="toggleSelect(this)">
+    <div class="card-image">
+      <div style="display:flex;height:190px;background:#f5f5f5;">
+        <div style="width:56px;background:#1a237e;display:flex;flex-direction:column;align-items:center;padding:12px 0;gap:20px;">
+          <div style="color:white;font-size:18px;" title="Equipamentos">🏭</div>
+          <div style="color:rgba(255,255,255,0.5);font-size:18px;" title="Novo">➕</div>
+          <div style="color:rgba(255,255,255,0.5);font-size:18px;" title="Histórico">📋</div>
+          <div style="margin-top:auto;color:rgba(255,255,255,0.5);font-size:18px;" title="Sair">🚪</div>
+        </div>
+        <div style="flex:1;padding:16px;">
+          <div style="font-size:11px;font-weight:700;color:#333;margin-bottom:8px;">EQUIPAMENTOS</div>
+          <div style="display:flex;gap:8px;flex-wrap:wrap;">
+            <div style="background:white;border-radius:4px;padding:6px 10px;font-size:10px;box-shadow:0 1px 2px rgba(0,0,0,.1);">Caldeira B-01</div>
+            <div style="background:white;border-radius:4px;padding:6px 10px;font-size:10px;box-shadow:0 1px 2px rgba(0,0,0,.1);">Compressor K-12</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="card-body">
+      <h3>B — Sidebar com ícones</h3>
+      <p>Rail lateral compacto (56px), ícones + tooltip. Mais espaço horizontal. Aspecto moderno/profissional.</p>
+    </div>
+  </div>
+
+  <div class="card" data-choice="c" onclick="toggleSelect(this)">
+    <div class="card-image">
+      <div style="display:flex;height:190px;background:#f5f5f5;">
+        <div style="width:200px;background:#1a237e;display:flex;flex-direction:column;padding:16px 0;gap:4px;">
+          <div style="color:white;font-size:13px;font-weight:700;padding:8px 16px;margin-bottom:8px;">⚙️ Inspeção IA</div>
+          <div style="background:rgba(255,255,255,0.15);color:white;padding:10px 16px;font-size:12px;display:flex;align-items:center;gap:8px;">🏭 Equipamentos</div>
+          <div style="color:rgba(255,255,255,0.6);padding:10px 16px;font-size:12px;display:flex;align-items:center;gap:8px;">📋 Histórico</div>
+          <div style="color:rgba(255,255,255,0.6);padding:10px 16px;font-size:12px;display:flex;align-items:center;gap:8px;">➕ Novo Equip.</div>
+          <div style="margin-top:auto;color:rgba(255,255,255,0.6);padding:10px 16px;font-size:12px;display:flex;align-items:center;gap:8px;">🚪 Sair</div>
+        </div>
+        <div style="flex:1;padding:16px;font-size:10px;">
+          <div style="font-size:11px;font-weight:700;color:#333;margin-bottom:8px;">EQUIPAMENTOS</div>
+          <div style="background:white;border-radius:4px;padding:8px;box-shadow:0 1px 2px rgba(0,0,0,.1);margin-bottom:6px;">Caldeira B-01</div>
+          <div style="background:white;border-radius:4px;padding:8px;box-shadow:0 1px 2px rgba(0,0,0,.1);">Compressor K-12</div>
+        </div>
+      </div>
+    </div>
+    <div class="card-body">
+      <h3>C — Sidebar com labels</h3>
+      <p>Drawer lateral expandido (200px) com texto + ícone. Mais claro para quem não conhece. Menor área de conteúdo.</p>
+    </div>
+  </div>
+
+</div>

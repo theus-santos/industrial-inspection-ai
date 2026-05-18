@@ -1,0 +1,86 @@
+<h2>Como exibir os equipamentos?</h2>
+<p class="subtitle">Página principal após login</p>
+
+<div class="split">
+
+  <div class="mockup" data-choice="a" onclick="toggleSelect(this)" style="cursor:pointer;">
+    <div class="mockup-header">A — Cards em grade</div>
+    <div class="mockup-body" style="background:#f5f7fa;padding:12px;">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
+        <span style="font-size:12px;font-weight:700;color:#0d1b2a;">Equipamentos</span>
+        <button style="background:#2196f3;color:white;border:none;border-radius:4px;padding:4px 10px;font-size:10px;">+ Novo</button>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
+        <div style="background:white;border-radius:8px;padding:10px;box-shadow:0 2px 8px rgba(0,0,0,.08);">
+          <div style="font-size:11px;font-weight:700;color:#0d1b2a;margin-bottom:2px;">Caldeira B-01</div>
+          <div style="font-size:9px;color:#666;margin-bottom:6px;">Setor Norte · Manutenção</div>
+          <div style="display:flex;gap:4px;">
+            <button style="background:#2196f3;color:white;border:none;border-radius:3px;padding:3px 7px;font-size:9px;flex:1;">Inspecionar</button>
+            <button style="background:transparent;border:1px solid #ccc;color:#666;border-radius:3px;padding:3px 7px;font-size:9px;">📋</button>
+          </div>
+        </div>
+        <div style="background:white;border-radius:8px;padding:10px;box-shadow:0 2px 8px rgba(0,0,0,.08);">
+          <div style="font-size:11px;font-weight:700;color:#0d1b2a;margin-bottom:2px;">Compressor K-12</div>
+          <div style="font-size:9px;color:#666;margin-bottom:6px;">Setor Sul · Solda</div>
+          <div style="display:flex;gap:4px;">
+            <button style="background:#2196f3;color:white;border:none;border-radius:3px;padding:3px 7px;font-size:9px;flex:1;">Inspecionar</button>
+            <button style="background:transparent;border:1px solid #ccc;color:#666;border-radius:3px;padding:3px 7px;font-size:9px;">📋</button>
+          </div>
+        </div>
+        <div style="background:white;border-radius:8px;padding:10px;box-shadow:0 2px 8px rgba(0,0,0,.08);">
+          <div style="font-size:11px;font-weight:700;color:#0d1b2a;margin-bottom:2px;">Bomba D-04</div>
+          <div style="font-size:9px;color:#666;margin-bottom:6px;">Setor Leste · Estruturas</div>
+          <div style="display:flex;gap:4px;">
+            <button style="background:#2196f3;color:white;border:none;border-radius:3px;padding:3px 7px;font-size:9px;flex:1;">Inspecionar</button>
+            <button style="background:transparent;border:1px solid #ccc;color:#666;border-radius:3px;padding:3px 7px;font-size:9px;">📋</button>
+          </div>
+        </div>
+        <div style="background:white;border-radius:8px;padding:10px;box-shadow:0 2px 8px rgba(0,0,0,.08);border:2px dashed #e0e0e0;display:flex;align-items:center;justify-content:center;">
+          <span style="font-size:10px;color:#bbb;">+ Adicionar</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="mockup" data-choice="b" onclick="toggleSelect(this)" style="cursor:pointer;">
+    <div class="mockup-header">B — Lista com status</div>
+    <div class="mockup-body" style="background:#f5f7fa;padding:12px;">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
+        <span style="font-size:12px;font-weight:700;color:#0d1b2a;">Equipamentos</span>
+        <button style="background:#2196f3;color:white;border:none;border-radius:4px;padding:4px 10px;font-size:10px;">+ Novo</button>
+      </div>
+      <div style="background:white;border-radius:8px;box-shadow:0 2px 8px rgba(0,0,0,.08);overflow:hidden;">
+        <div style="display:flex;align-items:center;padding:10px 12px;border-bottom:1px solid #f0f0f0;gap:10px;">
+          <div style="width:8px;height:8px;border-radius:50%;background:#4caf50;flex-shrink:0;"></div>
+          <div style="flex:1;">
+            <div style="font-size:11px;font-weight:700;color:#0d1b2a;">Caldeira B-01</div>
+            <div style="font-size:9px;color:#888;">Setor Norte · Última inspeção: 10/05</div>
+          </div>
+          <span style="background:#e3f2fd;color:#1565c0;padding:2px 6px;border-radius:10px;font-size:9px;">Manutenção</span>
+          <button style="background:#2196f3;color:white;border:none;border-radius:3px;padding:3px 8px;font-size:9px;">Inspecionar</button>
+        </div>
+        <div style="display:flex;align-items:center;padding:10px 12px;border-bottom:1px solid #f0f0f0;gap:10px;">
+          <div style="width:8px;height:8px;border-radius:50%;background:#ff9800;flex-shrink:0;"></div>
+          <div style="flex:1;">
+            <div style="font-size:11px;font-weight:700;color:#0d1b2a;">Compressor K-12</div>
+            <div style="font-size:9px;color:#888;">Setor Sul · Inspeção em andamento</div>
+          </div>
+          <span style="background:#fff3e0;color:#e65100;padding:2px 6px;border-radius:10px;font-size:9px;">Solda</span>
+          <button style="background:#2196f3;color:white;border:none;border-radius:3px;padding:3px 8px;font-size:9px;">Continuar</button>
+        </div>
+        <div style="display:flex;align-items:center;padding:10px 12px;gap:10px;">
+          <div style="width:8px;height:8px;border-radius:50%;background:#e0e0e0;flex-shrink:0;"></div>
+          <div style="flex:1;">
+            <div style="font-size:11px;font-weight:700;color:#0d1b2a;">Bomba D-04</div>
+            <div style="font-size:9px;color:#888;">Setor Leste · Nunca inspecionado</div>
+          </div>
+          <span style="background:#f3e5f5;color:#6a1b9a;padding:2px 6px;border-radius:10px;font-size:9px;">Estruturas</span>
+          <button style="background:#2196f3;color:white;border:none;border-radius:3px;padding:3px 8px;font-size:9px;">Inspecionar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<p class="subtitle" style="margin-top:16px;">A — Mais visual, fácil de escanear. B — Mais informação por item (status de inspeção, última data). Clique para selecionar.</p>

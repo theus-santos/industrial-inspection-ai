@@ -34,6 +34,18 @@ const SEVERITY_LABEL: Record<string, string> = {
   critical: 'Crítico',
 };
 
+const DEFECT_LABEL: Record<string, string> = {
+  crack: 'Rachadura',
+  rust: 'Ferrugem',
+  leak: 'Vazamento',
+  wear: 'Desgaste',
+  weld_failure: 'Falha de Solda',
+  damaged_part: 'Peça Danificada',
+  loose_bolt: 'Parafuso Solto',
+  deformation: 'Deformação',
+  safety_risk: 'Risco de Segurança',
+};
+
 @Component({
   selector: 'app-photos',
   standalone: true,
@@ -45,6 +57,7 @@ export class PhotosComponent {
   inspectionId: string;
   severityColor = SEVERITY_COLOR;
   severityLabel = SEVERITY_LABEL;
+  defectLabel = DEFECT_LABEL;
 
   constructor(
     private api: ApiService,

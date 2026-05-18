@@ -28,19 +28,21 @@ export class GeminiService {
   }
 
   async analyzeImage(imageUrl: string): Promise<GeminiAnalysisResult> {
-    const model = this.genAI.getGenerativeModel({ model: 'gemini-1.5-flash' });
+    const model = this.genAI.getGenerativeModel({ model: 'gemini-2.5-flash' });
+    const { data, mimeType } = await this.fetchImageAsBase64(imageUrl);
     const result = await model.generateContent([
       ANALYSIS_PROMPT,
-      { inlineData: { mimeType: 'image/jpeg', data: await this.fetchImageAsBase64(imageUrl) } },
+      { inlineData: { mimeType, data } },
     ]);
     const text = result.response.text();
     const json = JSON.parse(text.replace(/```json\n?/g, '').replace(/```\n?/g, '').trim());
     return { defects: json.defects ?? [], summary: json.summary ?? '' };
   }
 
-  private async fetchImageAsBase64(url: string): Promise<string> {
+  private async fetchImageAsBase64(url: string): Promise<{ data: string; mimeType: string }> {
     const response = await fetch(url);
+    const mimeType = response.headers.get('content-type') ?? 'image/jpeg';
     const buffer = await response.arrayBuffer();
-    return Buffer.from(buffer).toString('base64');
+    return { data: Buffer.from(buffer).toString('base64'), mimeType };
   }
 }

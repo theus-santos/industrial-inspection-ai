@@ -1,6 +1,7 @@
 import { APIGatewayProxyEventV2, APIGatewayProxyResultV2 } from 'aws-lambda';
 import { PutObjectCommand } from '@aws-sdk/client-s3';
 import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
+import { v4 as uuidv4 } from 'uuid';
 import { getS3Client } from '../shared/s3.client';
 import { PhotoRepo } from '../repositories/photo.repo';
 
@@ -20,8 +21,10 @@ export async function handler(event: APIGatewayProxyEventV2): Promise<APIGateway
 
     if (!inspectionId) return json(400, { message: 'inspectionId required' });
 
-    const photo = await repo.createPhotoRecord({ inspectionId, s3Key: `photos/${inspectionId}/tmp` });
-    const s3Key = `photos/${inspectionId}/${photo.id}.jpg`;
+    const photoId = uuidv4();
+    const s3Key = `photos/${inspectionId}/${photoId}`;
+
+    await repo.createPhotoRecord({ id: photoId, inspectionId, s3Key });
 
     const uploadUrl = await getSignedUrl(
       getS3Client(),
@@ -29,7 +32,7 @@ export async function handler(event: APIGatewayProxyEventV2): Promise<APIGateway
       { expiresIn: 300 }
     );
 
-    return json(200, { uploadUrl, photoId: photo.id, s3Key });
+    return json(200, { uploadUrl, photoId, s3Key });
   } catch (err) {
     console.error(err);
     return json(500, { message: 'Internal server error' });

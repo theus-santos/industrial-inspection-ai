@@ -63,7 +63,7 @@
             <span *ngFor="let d of photo.analysis.defects"
                   [style.background]="severityColor[d.severity]"
                   style="color:white;padding:3px 10px;border-radius:12px;font-size:10px;font-weight:600">
-              {{ d.type }} — {{ severityLabel[d.severity] }}
+              {{ defectLabel[d.type] || d.type }} — {{ severityLabel[d.severity] }}
             </span>
           </div>
           <div *ngIf="photo.analysis.summary" style="font-size:11px;color:#78909c;margin-top:4px;font-style:italic">
