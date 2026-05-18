@@ -17,11 +17,11 @@
   </div>
 
   <!-- Drop zone / empty state -->
-  <div *ngIf="photos.length === 0"
+  <div #dropZone *ngIf="photos.length === 0"
        style="border:2px dashed #90caf9;border-radius:8px;padding:40px;text-align:center;background:#f8fbff;cursor:pointer"
        (click)="fileInput.click()"
-       (mouseenter)="$event.currentTarget.style.borderColor='#2196f3';$event.currentTarget.style.background='#e3f2fd'"
-       (mouseleave)="$event.currentTarget.style.borderColor='#90caf9';$event.currentTarget.style.background='#f8fbff'">
+       (mouseenter)="onDropZoneHover(dropZone, true)"
+       (mouseleave)="onDropZoneHover(dropZone, false)">
     <mat-icon style="font-size:48px;width:48px;height:48px;color:#90caf9;margin-bottom:8px">photo_camera</mat-icon>
     <div style="font-size:14px;font-weight:600;color:#1565c0;margin-bottom:4px">Clique ou arraste para adicionar fotos</div>
     <div style="font-size:12px;color:#90a4ae">JPG, PNG · máx 10MB por foto</div>

@@ -104,6 +104,16 @@ export class PhotosComponent {
     return this.photos.some(p => p.uploading || p.analyzing);
   }
 
+  onDropZoneHover(element: HTMLElement, isEnter: boolean): void {
+    if (isEnter) {
+      element.style.borderColor = '#2196f3';
+      element.style.background = '#e3f2fd';
+    } else {
+      element.style.borderColor = '#90caf9';
+      element.style.background = '#f8fbff';
+    }
+  }
+
   continue(): void {
     this.router.navigate(['/inspections', this.inspectionId, 'report']);
   }

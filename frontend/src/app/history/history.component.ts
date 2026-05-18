@@ -4,7 +4,17 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
-import { ApiService, Inspection } from '../../core/services/api.service';
+import { HttpClient } from '@angular/common/http';
+import { environment } from '../../environments/environment';
+
+interface Inspection {
+  id: string;
+  equipmentId: string;
+  inspector: string;
+  notes: string;
+  status: string;
+  createdAt: string;
+}
 
 const STATUS_LABEL: Record<string, string> = { open: 'Em andamento', completed: 'Concluída' };
 const STATUS_DOT: Record<string, string> = { open: '#ff9800', completed: '#4caf50' };
@@ -22,12 +32,13 @@ export class HistoryComponent implements OnInit {
   statusDot = STATUS_DOT;
   private equipmentId = '';
 
-  constructor(private api: ApiService, private route: ActivatedRoute, private router: Router, private snack: MatSnackBar) {}
+  constructor(private http: HttpClient, private route: ActivatedRoute, private router: Router, private snack: MatSnackBar) {}
 
   ngOnInit(): void {
     this.equipmentId = this.route.snapshot.params['id'];
-    this.api.getEquipmentHistory(this.equipmentId).subscribe({
-      next: data => { this.inspections = data; this.loading = false; },
+    const apiUrl = environment.apiUrl;
+    this.http.get<Inspection[]>(`${apiUrl}/equipments/${this.equipmentId}/history`).subscribe({
+      next: (data: Inspection[]) => { this.inspections = data; this.loading = false; },
       error: () => {
         this.loading = false;
         this.snack.open('Erro ao carregar histórico.', 'Fechar', { duration: 3000, panelClass: 'snack-error' });

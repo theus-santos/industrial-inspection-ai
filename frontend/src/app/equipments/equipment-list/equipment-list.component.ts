@@ -35,7 +35,7 @@ export class EquipmentListComponent implements OnInit {
 
   ngOnInit(): void {
     this.api.getEquipments().subscribe({
-      next: data => { this.equipments = data; this.loading = false; },
+      next: (data: Equipment[]) => { this.equipments = data; this.loading = false; },
       error: () => {
         this.loading = false;
         this.snack.open('Erro ao carregar equipamentos.', 'Fechar', { duration: 3000, panelClass: 'snack-error' });
