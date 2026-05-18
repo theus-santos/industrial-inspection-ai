@@ -1,11 +1,13 @@
 import { GoogleGenerativeAI } from '@google/generative-ai';
 import { Defect } from '../shared/types';
 
-const ANALYSIS_PROMPT = `Analyze this industrial inspection image.
-Identify the presence of the following defect types:
+const ANALYSIS_PROMPT = (equipmentType: string) => `Voce esta analisando uma foto de inspecao industrial de um equipamento do tipo: ${equipmentType}.
+Identifique defeitos relevantes para esse tipo de equipamento dentre os tipos abaixo:
 crack, rust, leak, wear, weld_failure, damaged_part, loose_bolt, deformation, safety_risk.
 
-Respond ONLY in JSON with this exact format:
+Se a imagem claramente NAO for compativel com o tipo de equipamento informado, retorne defects vazio e explique no summary.
+
+Responda APENAS em JSON com este formato exato:
 {
   "defects": [
     { "type": "<defect_type>", "severity": "low|medium|high|critical", "confidence": 0.0-1.0, "location": "<descricao em portugues>" }
@@ -13,7 +15,7 @@ Respond ONLY in JSON with this exact format:
   "summary": "<resumo geral em portugues>"
 }
 
-Use the English defect type names listed above. Write "location" and "summary" values in Brazilian Portuguese. If no defects found, return defects: [].`;
+Use os nomes de tipo em ingles listados acima. Escreva "location" e "summary" em portugues brasileiro. Se nenhum defeito encontrado, retorne defects: [].`;
 
 export interface GeminiAnalysisResult {
   defects: Defect[];
@@ -27,11 +29,11 @@ export class GeminiService {
     this.genAI = new GoogleGenerativeAI(apiKey);
   }
 
-  async analyzeImage(imageUrl: string): Promise<GeminiAnalysisResult> {
+  async analyzeImage(imageUrl: string, equipmentType: string): Promise<GeminiAnalysisResult> {
     const model = this.genAI.getGenerativeModel({ model: 'gemini-2.5-flash' });
     const { data, mimeType } = await this.fetchImageAsBase64(imageUrl);
     const result = await model.generateContent([
-      ANALYSIS_PROMPT,
+      ANALYSIS_PROMPT(equipmentType),
       { inlineData: { mimeType, data } },
     ]);
     const text = result.response.text();
