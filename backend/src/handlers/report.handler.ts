@@ -79,10 +79,14 @@ export async function handler(event: APIGatewayProxyEventV2): Promise<APIGateway
       ? (['critical', 'high', 'medium', 'low'] as const).find(s => allDefectsForSummary.some(d => d.severity === s)) ?? 'low'
       : 'none';
 
-    await inspectionRepo.updateSummary(inspectionId, {
-      defectCount: allDefectsForSummary.length,
-      maxSeverity: maxSeverityValue,
-    });
+    try {
+      await inspectionRepo.updateSummary(inspectionId, {
+        defectCount: allDefectsForSummary.length,
+        maxSeverity: maxSeverityValue,
+      });
+    } catch (summaryErr) {
+      console.error('Failed to update inspection summary:', summaryErr);
+    }
 
     return json(200, { downloadUrl, pdfKey });
   } catch (err) {
