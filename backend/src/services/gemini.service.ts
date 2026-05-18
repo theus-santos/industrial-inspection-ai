@@ -8,12 +8,12 @@ crack, rust, leak, wear, weld_failure, damaged_part, loose_bolt, deformation, sa
 Respond ONLY in JSON with this exact format:
 {
   "defects": [
-    { "type": "<defect_type>", "severity": "low|medium|high|critical", "confidence": 0.0-1.0, "location": "<location description>" }
+    { "type": "<defect_type>", "severity": "low|medium|high|critical", "confidence": 0.0-1.0, "location": "<descricao em portugues>" }
   ],
-  "summary": "<overall condition summary>"
+  "summary": "<resumo geral em portugues>"
 }
 
-Use the English defect type names listed above. If no defects found, return defects: [].`;
+Use the English defect type names listed above. Write "location" and "summary" values in Brazilian Portuguese. If no defects found, return defects: [].`;
 
 export interface GeminiAnalysisResult {
   defects: Defect[];

@@ -2,6 +2,20 @@ import PdfPrinter from 'pdfmake';
 import { TDocumentDefinitions, Content } from 'pdfmake/interfaces';
 import { ChecklistItem, DefectAnalysis, Equipment, Inspection, Photo } from '../shared/types';
 
+const EQUIPMENT_TYPE_LABEL: Record<string, string> = {
+  maintenance: 'Manutencao', welding: 'Solda', structures: 'Estruturas', equipment: 'Equipamento Geral',
+};
+
+const DEFECT_LABEL: Record<string, string> = {
+  crack: 'Rachadura', rust: 'Ferrugem', leak: 'Vazamento', wear: 'Desgaste',
+  weld_failure: 'Falha de Solda', damaged_part: 'Peca Danificada',
+  loose_bolt: 'Parafuso Solto', deformation: 'Deformacao', safety_risk: 'Risco de Seguranca',
+};
+
+const SEVERITY_LABEL: Record<string, string> = {
+  low: 'Baixo', medium: 'Medio', high: 'Alto', critical: 'Critico',
+};
+
 const FONTS = {
   Helvetica: {
     normal: 'Helvetica',
@@ -35,7 +49,7 @@ export class PdfService {
       {
         ul: checklist
           .filter(i => i.category === cat)
-          .map(i => ({ text: `${i.checked ? '✓' : '✗'} ${i.label}`, color: i.checked ? '#2e7d32' : '#c62828' })),
+          .map(i => ({ text: `${i.checked ? '[OK]' : '[REPROV]'} ${i.label}`, color: i.checked ? '#2e7d32' : '#c62828' })),
       } as Content,
     ]);
 
@@ -52,7 +66,7 @@ export class PdfService {
           table: {
             widths: ['*', '*'],
             body: [
-              ['Tipo', equipment.type],
+              ['Tipo', EQUIPMENT_TYPE_LABEL[equipment.type] ?? equipment.type],
               ['Localização', equipment.location],
               ['Inspetor', inspection.inspector],
               ['Data', new Date(inspection.createdAt).toLocaleString('pt-BR')],
@@ -69,13 +83,18 @@ export class PdfService {
           table: {
             widths: ['*', 'auto', 'auto', '*'],
             body: [
-              ['Tipo', 'Severidade', 'Confiança', 'Localização'],
-              ...allDefects.map(d => [d.type, d.severity, `${Math.round(d.confidence * 100)}%`, d.location]),
+              ['Tipo', 'Severidade', 'Confianca', 'Localizacao'],
+              ...allDefects.map(d => [
+                DEFECT_LABEL[d.type] ?? d.type,
+                SEVERITY_LABEL[d.severity] ?? d.severity,
+                `${Math.round(d.confidence * 100)}%`,
+                d.location,
+              ]),
             ],
           },
         } as Content,
         {
-          text: `\nSeveridade máxima: ${maxSeverity} | Total de defeitos: ${allDefects.length} | Itens reprovados: ${failedItems.length}`,
+          text: `\nSeveridade maxima: ${SEVERITY_LABEL[maxSeverity] ?? maxSeverity} | Total de defeitos: ${allDefects.length} | Itens reprovados: ${failedItems.length}`,
           margin: [0, 10, 0, 10] as [number, number, number, number],
         } as Content,
         ...notesContent,

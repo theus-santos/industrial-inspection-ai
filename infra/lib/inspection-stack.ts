@@ -69,7 +69,7 @@ export class InspectionStack extends cdk.Stack {
 
     const backendPath = path.join(__dirname, '../../backend');
 
-    const makeFunction = (id: string, entry: string): lambdaNode.NodejsFunction => {
+    const makeFunction = (id: string, entry: string, nodeModules?: string[]): lambdaNode.NodejsFunction => {
       const fn = new lambdaNode.NodejsFunction(this, id, {
         runtime: lambda.Runtime.NODEJS_20_X,
         entry: path.join(backendPath, entry),
@@ -77,7 +77,7 @@ export class InspectionStack extends cdk.Stack {
         environment: lambdaEnv,
         timeout: cdk.Duration.seconds(30),
         memorySize: 256,
-        bundling: { minify: true, sourceMap: false },
+        bundling: { minify: true, sourceMap: false, nodeModules },
       });
       table.grantReadWriteData(fn);
       photosBucket.grantReadWrite(fn);
@@ -89,7 +89,7 @@ export class InspectionStack extends cdk.Stack {
     const inspectionFn = makeFunction('InspectionFn', 'src/handlers/inspection.handler.ts');
     const photoFn = makeFunction('PhotoFn', 'src/handlers/photo.handler.ts');
     const analyzeFn = makeFunction('AnalyzeFn', 'src/handlers/analyze.handler.ts');
-    const reportFn = makeFunction('ReportFn', 'src/handlers/report.handler.ts');
+    const reportFn = makeFunction('ReportFn', 'src/handlers/report.handler.ts', ['pdfmake']);
 
     const api = new apigwv2.HttpApi(this, 'InspectionApi', {
       corsPreflight: {
