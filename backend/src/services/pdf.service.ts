@@ -16,6 +16,10 @@ const SEVERITY_LABEL: Record<string, string> = {
   low: 'Baixo', medium: 'Medio', high: 'Alto', critical: 'Critico',
 };
 
+const SEVERITY_COLOR_PDF: Record<string, string> = {
+  low: '#2e7d32', medium: '#e65100', high: '#c62828', critical: '#b71c1c',
+};
+
 const FONTS = {
   Helvetica: {
     normal: 'Helvetica',
@@ -25,17 +29,24 @@ const FONTS = {
   },
 };
 
+interface PhotoWithUrl {
+  photo: Photo;
+  url: string;
+  analysis: DefectAnalysis | undefined;
+}
+
 interface ReportInput {
   equipment: Equipment;
   inspection: Inspection;
   checklist: ChecklistItem[];
   photos: Photo[];
   analyses: DefectAnalysis[];
+  photosWithUrls: PhotoWithUrl[];
 }
 
 export class PdfService {
   async generate(input: ReportInput): Promise<Buffer> {
-    const { equipment, inspection, checklist, analyses } = input;
+    const { equipment, inspection, checklist, analyses, photosWithUrls } = input;
     const failedItems = checklist.filter(i => !i.checked);
     const allDefects = analyses.flatMap(a => a.defects);
     const maxSeverity = allDefects.length > 0
@@ -54,29 +65,69 @@ export class PdfService {
     ]);
 
     const notesContent: Content[] = inspection.notes
-      ? [{ text: `Observações: ${inspection.notes}`, italics: true }]
+      ? [{ text: `Observacoes: ${inspection.notes}`, italics: true }]
+      : [];
+
+    const imagesData = await this.fetchImagesAsBase64(photosWithUrls);
+
+    const photoContent: Content[] = photosWithUrls.length > 0
+      ? [
+          { text: '\nREGISTRO FOTOGRAFICO', style: 'sectionHeader', margin: [0, 20, 0, 8] as [number, number, number, number] } as Content,
+          ...imagesData.map(({ idx, data, mimeType }) => {
+            const pw = photosWithUrls[idx];
+            const defects = pw.analysis?.defects ?? [];
+            const summary = pw.analysis?.summary ?? '';
+            const defectStack: Content[] = defects.length > 0
+              ? defects.map(d => ({
+                  text: `${DEFECT_LABEL[d.type] ?? d.type} - ${SEVERITY_LABEL[d.severity] ?? d.severity}`,
+                  color: SEVERITY_COLOR_PDF[d.severity] ?? '#333',
+                  fontSize: 10,
+                  margin: [0, 0, 0, 2] as [number, number, number, number],
+                }))
+              : [{ text: '[OK] Nenhum defeito detectado', color: '#2e7d32', fontSize: 10 } as Content];
+
+            return {
+              table: {
+                widths: [175, '*'],
+                body: [[
+                  data ? { image: `data:${mimeType};base64,${data}`, width: 170 } : { text: '[Imagem indisponivel]', color: '#999', fontSize: 10 },
+                  {
+                    stack: [
+                      { text: `Foto ${idx + 1}`, bold: true, fontSize: 11, margin: [0, 0, 0, 6] } as Content,
+                      ...defectStack,
+                      ...(summary ? [{ text: `"${summary}"`, italics: true, color: '#78909c', fontSize: 10, margin: [0, 6, 0, 0] } as Content] : []),
+                    ],
+                    margin: [8, 0, 0, 0] as [number, number, number, number],
+                  },
+                ]],
+              },
+              layout: 'noBorders',
+              margin: [0, 0, 0, 12] as [number, number, number, number],
+            } as Content;
+          }),
+        ]
       : [];
 
     const docDefinition: TDocumentDefinitions = {
       defaultStyle: { font: 'Helvetica' },
       content: [
-        { text: 'RELATÓRIO DE INSPEÇÃO INDUSTRIAL', style: 'header' } as Content,
+        { text: 'RELATORIO DE INSPECAO INDUSTRIAL', style: 'header' } as Content,
         { text: `Equipamento: ${equipment.name}`, style: 'subheader' } as Content,
         {
           table: {
             widths: ['*', '*'],
             body: [
               ['Tipo', EQUIPMENT_TYPE_LABEL[equipment.type] ?? equipment.type],
-              ['Localização', equipment.location],
+              ['Localizacao', equipment.location],
               ['Inspetor', inspection.inspector],
               ['Data', new Date(inspection.createdAt).toLocaleString('pt-BR')],
-              ['Status', inspection.status === 'completed' ? 'Concluída' : 'Aberta'],
-              ['ID da Inspeção', inspection.id],
+              ['Status', inspection.status === 'completed' ? 'Concluida' : 'Aberta'],
+              ['ID da Inspecao', inspection.id],
             ],
           },
           margin: [0, 10, 0, 20] as [number, number, number, number],
         } as Content,
-        { text: 'CHECKLIST DE INSPEÇÃO', style: 'sectionHeader' } as Content,
+        { text: 'CHECKLIST DE INSPECAO', style: 'sectionHeader' } as Content,
         ...checklistContent,
         { text: '\nRESUMO DE DEFEITOS', style: 'sectionHeader', margin: [0, 20, 0, 0] as [number, number, number, number] } as Content,
         {
@@ -98,7 +149,8 @@ export class PdfService {
           margin: [0, 10, 0, 10] as [number, number, number, number],
         } as Content,
         ...notesContent,
-        { text: `\nRelatório gerado em: ${new Date().toLocaleString('pt-BR')} | ID: ${inspection.id}`, fontSize: 8, color: '#757575', margin: [0, 30, 0, 0] as [number, number, number, number] } as Content,
+        ...photoContent,
+        { text: `\nRelatorio gerado em: ${new Date().toLocaleString('pt-BR')} | ID: ${inspection.id}`, fontSize: 8, color: '#757575', margin: [0, 30, 0, 0] as [number, number, number, number] } as Content,
       ],
       styles: {
         header: { fontSize: 18, bold: true, alignment: 'center', margin: [0, 0, 0, 10] as [number, number, number, number] },
@@ -117,5 +169,22 @@ export class PdfService {
       doc.on('error', reject);
       doc.end();
     });
+  }
+
+  private async fetchImagesAsBase64(
+    photosWithUrls: PhotoWithUrl[],
+  ): Promise<Array<{ idx: number; data: string; mimeType: string }>> {
+    return Promise.all(
+      photosWithUrls.map(async ({ url }, idx) => {
+        try {
+          const response = await fetch(url);
+          const mimeType = response.headers.get('content-type') ?? 'image/jpeg';
+          const buffer = await response.arrayBuffer();
+          return { idx, data: Buffer.from(buffer).toString('base64'), mimeType };
+        } catch {
+          return { idx, data: '', mimeType: 'image/jpeg' };
+        }
+      })
+    );
   }
 }

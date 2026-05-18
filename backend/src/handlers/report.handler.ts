@@ -9,6 +9,7 @@ import { PdfService } from '../services/pdf.service';
 
 const TABLE = process.env.TABLE_NAME!;
 const PDFS_BUCKET = process.env.PDFS_BUCKET!;
+const PHOTOS_BUCKET = process.env.PHOTOS_BUCKET!;
 
 function json(statusCode: number, body: unknown): APIGatewayProxyResultV2 {
   return { statusCode, headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) };
@@ -38,7 +39,29 @@ export async function handler(event: APIGatewayProxyEventV2): Promise<APIGateway
     const analyses = await Promise.all(photos.map(p => photoRepo.getAnalysis(p.id)));
     const validAnalyses = analyses.filter((a): a is NonNullable<typeof a> => a !== null);
 
-    const pdfBuffer = await pdfService.generate({ equipment, inspection, checklist, photos, analyses: validAnalyses });
+    const photosWithUrls = await Promise.all(
+      photos.map(async photo => {
+        const url = await getSignedUrl(
+          getS3Client(),
+          new GetObjectCommand({ Bucket: PHOTOS_BUCKET, Key: photo.s3Key }),
+          { expiresIn: 120 },
+        );
+        return {
+          photo,
+          url,
+          analysis: validAnalyses.find(a => a.photoId === photo.id),
+        };
+      })
+    );
+
+    const pdfBuffer = await pdfService.generate({
+      equipment,
+      inspection,
+      checklist,
+      photos,
+      analyses: validAnalyses,
+      photosWithUrls,
+    });
 
     const pdfKey = `reports/${inspectionId}.pdf`;
     await getS3Client().send(
