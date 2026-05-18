@@ -1,0 +1,25 @@
+<div class="login-container">
+  <mat-card class="login-card">
+    <mat-card-header>
+      <mat-card-title>Inspeção Industrial IA</mat-card-title>
+      <mat-card-subtitle>Acesse sua conta</mat-card-subtitle>
+    </mat-card-header>
+    <mat-card-content>
+      <form (ngSubmit)="onSubmit()" #f="ngForm">
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>E-mail</mat-label>
+          <input matInput type="email" [(ngModel)]="email" name="email" required />
+        </mat-form-field>
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Senha</mat-label>
+          <input matInput type="password" [(ngModel)]="password" name="password" required />
+        </mat-form-field>
+        <p class="error" *ngIf="error">{{ error }}</p>
+        <button mat-raised-button color="primary" type="submit" [disabled]="loading" class="full-width">
+          <mat-spinner diameter="20" *ngIf="loading"></mat-spinner>
+          <span *ngIf="!loading">Entrar</span>
+        </button>
+      </form>
+    </mat-card-content>
+  </mat-card>
+</div>
