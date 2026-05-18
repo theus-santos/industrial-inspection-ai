@@ -20,6 +20,8 @@ export interface Inspection {
   notes: string;
   status: InspectionStatus;
   createdAt: string;
+  defectCount?: number;
+  maxSeverity?: string;
 }
 
 export interface ChecklistItem {

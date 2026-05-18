@@ -1,4 +1,4 @@
-import { PutCommand, GetCommand, QueryCommand, TransactWriteCommand } from '@aws-sdk/lib-dynamodb';
+import { PutCommand, GetCommand, QueryCommand, TransactWriteCommand, UpdateCommand } from '@aws-sdk/lib-dynamodb';
 import { v4 as uuidv4 } from 'uuid';
 import { getDocumentClient } from '../shared/dynamo.client';
 import { ChecklistItem, Inspection } from '../shared/types';
@@ -69,5 +69,16 @@ export class InspectionRepo {
       })
     );
     return (result.Items ?? []).map(({ PK, SK, ...ins }) => ins as Inspection);
+  }
+
+  async updateSummary(id: string, data: { defectCount: number; maxSeverity: string }): Promise<void> {
+    await getDocumentClient().send(
+      new UpdateCommand({
+        TableName: this.table,
+        Key: { PK: `INSPECTION#${id}`, SK: 'METADATA' },
+        UpdateExpression: 'SET defectCount = :dc, maxSeverity = :ms',
+        ExpressionAttributeValues: { ':dc': data.defectCount, ':ms': data.maxSeverity },
+      })
+    );
   }
 }

@@ -74,6 +74,16 @@ export async function handler(event: APIGatewayProxyEventV2): Promise<APIGateway
       { expiresIn: 3600 }
     );
 
+    const allDefectsForSummary = validAnalyses.flatMap(a => a.defects);
+    const maxSeverityValue = allDefectsForSummary.length > 0
+      ? (['critical', 'high', 'medium', 'low'] as const).find(s => allDefectsForSummary.some(d => d.severity === s)) ?? 'low'
+      : 'none';
+
+    await inspectionRepo.updateSummary(inspectionId, {
+      defectCount: allDefectsForSummary.length,
+      maxSeverity: maxSeverityValue,
+    });
+
     return json(200, { downloadUrl, pdfKey });
   } catch (err) {
     console.error(err);
