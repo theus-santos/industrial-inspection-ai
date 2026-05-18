@@ -41,6 +41,8 @@
           <input matInput type="password" formControlName="password" autocomplete="new-password">
           <mat-error *ngIf="form.get('password')?.hasError('required')">Senha obrigatória</mat-error>
           <mat-error *ngIf="form.get('password')?.hasError('minlength')">Mínimo 8 caracteres</mat-error>
+          <mat-error *ngIf="form.get('password')?.hasError('noUppercase')">Precisa de ao menos uma letra maiúscula</mat-error>
+          <mat-error *ngIf="form.get('password')?.hasError('noNumber')">Precisa de ao menos um número</mat-error>
         </mat-form-field>
 
         <mat-form-field appearance="outline" style="width:100%">

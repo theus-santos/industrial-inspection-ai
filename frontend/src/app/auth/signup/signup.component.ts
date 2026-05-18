@@ -14,6 +14,14 @@ function passwordMatch(control: AbstractControl): ValidationErrors | null {
   return pw && confirm && pw !== confirm ? { mismatch: true } : null;
 }
 
+function passwordStrength(control: AbstractControl): ValidationErrors | null {
+  const v = control.value as string;
+  if (!v) return null;
+  if (!/[A-Z]/.test(v)) return { noUppercase: true };
+  if (!/[0-9]/.test(v)) return { noNumber: true };
+  return null;
+}
+
 @Component({
   selector: 'app-signup',
   standalone: true,
@@ -23,7 +31,7 @@ function passwordMatch(control: AbstractControl): ValidationErrors | null {
 export class SignupComponent {
   form = this.fb.group({
     email: ['', [Validators.required, Validators.email]],
-    password: ['', [Validators.required, Validators.minLength(8)]],
+    password: ['', [Validators.required, Validators.minLength(8), passwordStrength]],
     confirm: ['', Validators.required],
   }, { validators: passwordMatch });
 
