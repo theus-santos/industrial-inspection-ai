@@ -1,0 +1,11 @@
+{
+  "name": "industrial-inspection-ai",
+  "private": true,
+  "workspaces": ["backend", "infra"],
+  "scripts": {
+    "test:backend": "yarn workspace backend test",
+    "lint:backend": "yarn workspace backend lint",
+    "build:backend": "yarn workspace backend build",
+    "deploy:infra": "yarn workspace infra cdk deploy"
+  }
+}
