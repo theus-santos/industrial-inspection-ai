@@ -39,7 +39,7 @@
   </mat-drawer>
 
   <mat-drawer-content>
-    <div style="padding:24px;max-width:900px;margin:0 auto">
+    <div [style]="auth.isAuthenticated() ? 'padding:24px;max-width:900px;margin:0 auto' : ''">
       <router-outlet></router-outlet>
     </div>
   </mat-drawer-content>
