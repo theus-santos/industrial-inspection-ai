@@ -35,8 +35,9 @@
   <div *ngFor="let eq of equipments; let last = last"
        style="display:flex;align-items:center;padding:14px 16px;gap:12px;cursor:pointer;transition:background .15s"
        [style.border-bottom]="last ? 'none' : '1px solid #f5f5f5'"
-       (mouseenter)="$event.currentTarget.style.background='#f8f9ff'"
-       (mouseleave)="$event.currentTarget.style.background='white'">
+       [style.background]="hoveredEquipmentId === eq.id ? '#f8f9ff' : 'white'"
+       (mouseenter)="onMouseEnter(eq.id)"
+       (mouseleave)="onMouseLeave()">
     <div style="width:10px;height:10px;border-radius:50%;flex-shrink:0;background:#4caf50;box-shadow:0 0 0 3px rgba(76,175,80,.15)"></div>
     <div style="flex:1;min-width:0">
       <div style="font-size:13px;font-weight:600;color:#0d1b2a;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ eq.name }}</div>

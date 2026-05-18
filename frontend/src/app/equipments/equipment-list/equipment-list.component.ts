@@ -29,6 +29,7 @@ export class EquipmentListComponent implements OnInit {
   loading = true;
   typeLabel = TYPE_LABEL;
   typeColor = TYPE_COLOR;
+  hoveredEquipmentId: string | null = null;
 
   constructor(private api: ApiService, private router: Router, private snack: MatSnackBar) {}
 
@@ -42,6 +43,8 @@ export class EquipmentListComponent implements OnInit {
     });
   }
 
+  onMouseEnter(id: string): void { this.hoveredEquipmentId = id; }
+  onMouseLeave(): void { this.hoveredEquipmentId = null; }
   newEquipment(): void { this.router.navigate(['/equipments/new']); }
   inspect(id: string): void { this.router.navigate(['/equipments', id, 'inspect']); }
   history(id: string): void { this.router.navigate(['/equipments', id, 'history']); }
