@@ -1,0 +1,60 @@
+<div style="max-width:680px;margin:0 auto">
+  <div style="margin-bottom:24px">
+    <h1 style="margin:0;font-size:22px;font-weight:700;color:#0d1b2a">Dashboard</h1>
+    <p style="margin:4px 0 0;color:#78909c;font-size:13px">Visão geral das inspeções</p>
+  </div>
+
+  <!-- Skeleton loading -->
+  <div *ngIf="loading" style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:24px">
+    <div *ngFor="let i of [1,2,3,4]" class="skeleton" style="height:80px;border-radius:8px"></div>
+  </div>
+
+  <!-- KPI Cards -->
+  <div *ngIf="!loading" style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:24px">
+
+    <div style="background:white;border-radius:8px;padding:16px;box-shadow:0 2px 8px rgba(0,0,0,.06)">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px">
+        <mat-icon style="color:#2196f3">precision_manufacturing</mat-icon>
+        <span style="font-size:12px;color:#78909c;font-weight:500">Equipamentos</span>
+      </div>
+      <div style="font-size:28px;font-weight:700;color:#0d1b2a">{{ totalEquipments }}</div>
+    </div>
+
+    <div style="background:white;border-radius:8px;padding:16px;box-shadow:0 2px 8px rgba(0,0,0,.06)">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px">
+        <mat-icon style="color:#4caf50">task_alt</mat-icon>
+        <span style="font-size:12px;color:#78909c;font-weight:500">Inspeções</span>
+      </div>
+      <div style="font-size:28px;font-weight:700;color:#0d1b2a">{{ totalInspections }}</div>
+    </div>
+
+    <div style="background:white;border-radius:8px;padding:16px;box-shadow:0 2px 8px rgba(0,0,0,.06)">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px">
+        <mat-icon style="color:#f44336">warning</mat-icon>
+        <span style="font-size:12px;color:#78909c;font-weight:500">Críticos</span>
+      </div>
+      <div style="font-size:28px;font-weight:700" [style.color]="criticalCount > 0 ? '#c62828' : '#0d1b2a'">{{ criticalCount }}</div>
+    </div>
+
+    <div style="background:white;border-radius:8px;padding:16px;box-shadow:0 2px 8px rgba(0,0,0,.06)">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px">
+        <mat-icon style="color:#ff9800">schedule</mat-icon>
+        <span style="font-size:12px;color:#78909c;font-weight:500">Última Inspeção</span>
+      </div>
+      <div style="font-size:13px;font-weight:600;color:#0d1b2a">
+        {{ lastInspectionDate ? (lastInspectionDate | date:'dd/MM/yyyy') : '—' }}
+      </div>
+    </div>
+  </div>
+
+  <!-- CTAs -->
+  <div *ngIf="!loading" style="display:flex;gap:12px;flex-wrap:wrap">
+    <button mat-raised-button color="primary" (click)="goToEquipments()"
+            style="border-radius:28px;padding:10px 24px;font-weight:600;box-shadow:0 4px 12px rgba(33,150,243,.4)">
+      <mat-icon>search</mat-icon> Ver Equipamentos
+    </button>
+    <button mat-stroked-button color="primary" (click)="newEquipment()" style="border-radius:28px;padding:10px 24px">
+      <mat-icon>add</mat-icon> Novo Equipamento
+    </button>
+  </div>
+</div>

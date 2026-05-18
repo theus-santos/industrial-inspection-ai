@@ -5,7 +5,7 @@ import { environment } from '../../../environments/environment';
 
 export interface Equipment { id: string; name: string; type: string; location: string; createdAt: string; }
 export interface ChecklistItem { id: string; inspectionId: string; label: string; category: string; checked: boolean; }
-export interface Inspection { id: string; equipmentId: string; inspector: string; notes: string; status: string; createdAt: string; }
+export interface Inspection { id: string; equipmentId: string; inspector: string; notes: string; status: string; createdAt: string; defectCount?: number; maxSeverity?: string; }
 export interface Defect { type: string; severity: string; confidence: number; location: string; }
 export interface DefectAnalysis { photoId: string; defects: Defect[]; summary: string; analyzedAt: string; }
 export interface PresignedUrlResponse { uploadUrl: string; photoId: string; s3Key: string; }
