@@ -9,6 +9,7 @@ import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { MatMenuModule } from '@angular/material/menu';
 import { ApiService, Equipment } from '../../core/services/api.service';
 import { ConfirmDialogComponent } from '../../shared/confirm-dialog/confirm-dialog.component';
+import { QrDialogComponent } from '../../shared/qr-dialog/qr-dialog.component';
 
 const TYPE_LABEL: Record<string, string> = {
   maintenance: 'Manutenção', welding: 'Solda',
@@ -51,6 +52,13 @@ export class EquipmentListComponent implements OnInit {
   newEquipment(): void { this.router.navigate(['/equipments/new']); }
   inspect(id: string): void { this.router.navigate(['/equipments', id, 'inspect']); }
   history(id: string): void { this.router.navigate(['/equipments', id, 'history']); }
+
+  showQr(id: string, name: string): void {
+    this.dialog.open(QrDialogComponent, {
+      width: '320px',
+      data: { equipmentId: id, name },
+    });
+  }
 
   deleteEquipment(id: string, name: string): void {
     const ref = this.dialog.open(ConfirmDialogComponent, {

@@ -55,6 +55,9 @@
     <button mat-icon-button matTooltip="Histórico" (click)="history(eq.id)" style="flex-shrink:0" class="hide-mobile">
       <mat-icon style="color:#78909c">history</mat-icon>
     </button>
+    <button mat-icon-button matTooltip="QR Code" (click)="showQr(eq.id, eq.name)" style="flex-shrink:0" class="hide-mobile">
+      <mat-icon style="color:#78909c">qr_code</mat-icon>
+    </button>
     <button mat-icon-button matTooltip="Excluir" (click)="deleteEquipment(eq.id, eq.name)" style="flex-shrink:0;color:#ef5350" class="hide-mobile">
       <mat-icon>delete</mat-icon>
     </button>
@@ -65,6 +68,9 @@
     <mat-menu #equipMenu="matMenu">
       <button mat-menu-item (click)="history(eq.id)">
         <mat-icon>history</mat-icon> Histórico
+      </button>
+      <button mat-menu-item (click)="showQr(eq.id, eq.name)">
+        <mat-icon>qr_code</mat-icon> QR Code
       </button>
       <button mat-menu-item (click)="deleteEquipment(eq.id, eq.name)" style="color:#ef5350">
         <mat-icon style="color:#ef5350">delete</mat-icon> Excluir
