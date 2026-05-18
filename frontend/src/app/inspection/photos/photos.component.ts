@@ -6,6 +6,7 @@ import { MatStepperModule } from '@angular/material/stepper';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
+import { MatTooltipModule } from '@angular/material/tooltip';
 import { firstValueFrom } from 'rxjs';
 import { ApiService, DefectAnalysis } from '../../core/services/api.service';
 
@@ -36,7 +37,7 @@ const SEVERITY_LABEL: Record<string, string> = {
 @Component({
   selector: 'app-photos',
   standalone: true,
-  imports: [CommonModule, MatStepperModule, MatButtonModule, MatIconModule, MatSnackBarModule],
+  imports: [CommonModule, MatStepperModule, MatButtonModule, MatIconModule, MatSnackBarModule, MatTooltipModule],
   templateUrl: './photos.component.html',
 })
 export class PhotosComponent {
@@ -55,10 +56,17 @@ export class PhotosComponent {
     this.inspectionId = this.route.snapshot.params['id'];
   }
 
+  readonly MAX_PHOTOS = 10;
+
   onFileSelected(event: Event): void {
     const files = (event.target as HTMLInputElement).files;
     if (!files) return;
-    Array.from(files).forEach(file => {
+    const slots = this.MAX_PHOTOS - this.photos.length;
+    if (slots <= 0) {
+      this.snack.open(`Limite de ${this.MAX_PHOTOS} fotos atingido.`, 'Fechar', { duration: 3000, panelClass: 'snack-error' });
+      return;
+    }
+    Array.from(files).slice(0, slots).forEach(file => {
       const entry: PhotoEntry = {
         file,
         preview: URL.createObjectURL(file),
@@ -71,6 +79,14 @@ export class PhotosComponent {
       this.photos.push(entry);
       this.uploadAndAnalyze(entry);
     });
+    (event.target as HTMLInputElement).value = '';
+  }
+
+  removePhoto(index: number): void {
+    const entry = this.photos[index];
+    if (entry.uploading || entry.analyzing) return;
+    URL.revokeObjectURL(entry.preview);
+    this.photos.splice(index, 1);
   }
 
   private async uploadAndAnalyze(entry: PhotoEntry): Promise<void> {

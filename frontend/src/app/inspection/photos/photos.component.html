@@ -7,10 +7,13 @@
   </mat-stepper>
 
   <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
-    <h2 style="margin:0;font-size:18px;font-weight:700;color:#0d1b2a">Fotos da Inspeção</h2>
+    <div>
+      <h2 style="margin:0;font-size:18px;font-weight:700;color:#0d1b2a">Fotos da Inspeção</h2>
+      <span style="font-size:12px;color:#90a4ae">{{ photos.length }}/{{ MAX_PHOTOS }} fotos</span>
+    </div>
     <label>
       <input #fileInput type="file" accept="image/*" multiple (change)="onFileSelected($event)" style="display:none" />
-      <button mat-raised-button color="primary" (click)="fileInput.click()">
+      <button mat-raised-button color="primary" (click)="fileInput.click()" [disabled]="photos.length >= MAX_PHOTOS">
         <mat-icon>add_a_photo</mat-icon> Adicionar Fotos
       </button>
     </label>
@@ -28,8 +31,9 @@
   </div>
 
   <!-- Photo cards -->
-  <div *ngFor="let photo of photos"
-       style="background:white;border-radius:8px;box-shadow:0 2px 8px rgba(0,0,0,.08);overflow:hidden;margin-bottom:12px;display:flex">
+  <div *ngFor="let photo of photos; let i = index"
+       style="background:white;border-radius:8px;box-shadow:0 2px 8px rgba(0,0,0,.08);overflow:hidden;margin-bottom:12px;display:flex"
+       [style.border]="photo.error ? '1px solid #ef9a9a' : '1px solid transparent'">
     <img [src]="photo.preview" style="width:120px;height:100px;object-fit:cover;flex-shrink:0" />
     <div style="flex:1;padding:12px 16px;display:flex;flex-direction:column;justify-content:center;gap:6px">
       <div style="font-size:12px;font-weight:600;color:#0d1b2a;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">
@@ -43,22 +47,32 @@
         <div style="width:16px;height:16px;border:2px solid #2196f3;border-top-color:transparent;border-radius:50%;animation:spin 1s linear infinite;flex-shrink:0"></div>
         Analisando com IA...
       </div>
-      <div *ngIf="photo.error" style="color:#c62828;font-size:12px">{{ photo.error }}</div>
-      <div *ngIf="photo.analysis">
-        <div *ngIf="photo.analysis.defects.length === 0"
-             style="display:inline-flex;align-items:center;gap:4px;background:#e8f5e9;color:#2e7d32;padding:3px 10px;border-radius:12px;font-size:11px;font-weight:600">
-          ✓ Nenhum defeito detectado
+      <div *ngIf="photo.error" style="display:flex;align-items:center;gap:8px">
+        <span style="color:#c62828;font-size:12px;flex:1">{{ photo.error }}</span>
+        <button mat-icon-button (click)="removePhoto(i)" matTooltip="Remover" style="color:#ef5350;width:32px;height:32px">
+          <mat-icon style="font-size:18px">delete</mat-icon>
+        </button>
+      </div>
+      <div *ngIf="photo.analysis" style="display:flex;align-items:flex-start;gap:8px">
+        <div style="flex:1">
+          <div *ngIf="photo.analysis.defects.length === 0"
+               style="display:inline-flex;align-items:center;gap:4px;background:#e8f5e9;color:#2e7d32;padding:3px 10px;border-radius:12px;font-size:11px;font-weight:600">
+            ✓ Nenhum defeito detectado
+          </div>
+          <div style="display:flex;flex-wrap:wrap;gap:6px" *ngIf="photo.analysis.defects.length > 0">
+            <span *ngFor="let d of photo.analysis.defects"
+                  [style.background]="severityColor[d.severity]"
+                  style="color:white;padding:3px 10px;border-radius:12px;font-size:10px;font-weight:600">
+              {{ d.type }} — {{ severityLabel[d.severity] }}
+            </span>
+          </div>
+          <div *ngIf="photo.analysis.summary" style="font-size:11px;color:#78909c;margin-top:4px;font-style:italic">
+            "{{ photo.analysis.summary }}"
+          </div>
         </div>
-        <div style="display:flex;flex-wrap:wrap;gap:6px" *ngIf="photo.analysis.defects.length > 0">
-          <span *ngFor="let d of photo.analysis.defects"
-                [style.background]="severityColor[d.severity]"
-                style="color:white;padding:3px 10px;border-radius:12px;font-size:10px;font-weight:600">
-            {{ d.type }} — {{ severityLabel[d.severity] }}
-          </span>
-        </div>
-        <div *ngIf="photo.analysis.summary" style="font-size:11px;color:#78909c;margin-top:4px;font-style:italic">
-          "{{ photo.analysis.summary }}"
-        </div>
+        <button mat-icon-button (click)="removePhoto(i)" matTooltip="Remover foto" style="color:#90a4ae;width:32px;height:32px;flex-shrink:0">
+          <mat-icon style="font-size:18px">delete</mat-icon>
+        </button>
       </div>
     </div>
   </div>
