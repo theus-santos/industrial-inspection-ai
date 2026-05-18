@@ -15,8 +15,8 @@ export async function handler(event: APIGatewayProxyEventV2): Promise<APIGateway
   const repo = new PhotoRepo(TABLE);
 
   try {
-    const body = JSON.parse(event.body ?? '{}');
-    const { inspectionId, contentType = 'image/jpeg' } = body;
+    const inspectionId = event.queryStringParameters?.['inspectionId'];
+    const contentType = event.queryStringParameters?.['contentType'] ?? 'image/jpeg';
 
     if (!inspectionId) return json(400, { message: 'inspectionId required' });
 
