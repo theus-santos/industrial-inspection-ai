@@ -2,6 +2,7 @@
 
 <mat-dialog-content style="text-align:center;padding:16px">
   <canvas #qrCanvas style="border-radius:8px;box-shadow:0 2px 8px rgba(0,0,0,.12)"></canvas>
+  <p *ngIf="qrError" style="font-size:12px;color:#ef5350;margin-top:8px">Erro ao gerar QR Code.</p>
   <p style="font-size:12px;color:#78909c;margin-top:12px">
     Escaneie para iniciar a inspeção deste equipamento
   </p>
@@ -9,7 +10,7 @@
 
 <mat-dialog-actions align="end" style="padding:8px 16px 16px">
   <button mat-button mat-dialog-close>Fechar</button>
-  <button mat-raised-button color="primary" (click)="download()">
+  <button mat-raised-button color="primary" (click)="download()" [disabled]="qrError">
     <mat-icon>download</mat-icon> Baixar PNG
   </button>
 </mat-dialog-actions>

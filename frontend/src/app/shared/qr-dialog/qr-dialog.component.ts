@@ -13,6 +13,7 @@ import * as QRCode from 'qrcode';
 })
 export class QrDialogComponent implements AfterViewInit {
   @ViewChild('qrCanvas') canvasRef!: ElementRef<HTMLCanvasElement>;
+  qrError = false;
 
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: { equipmentId: string; name: string },
@@ -20,10 +21,15 @@ export class QrDialogComponent implements AfterViewInit {
 
   async ngAfterViewInit(): Promise<void> {
     const url = `${window.location.origin}/equipments/${this.data.equipmentId}/inspect`;
-    await QRCode.toCanvas(this.canvasRef.nativeElement, url, { width: 240, margin: 2 });
+    try {
+      await QRCode.toCanvas(this.canvasRef.nativeElement, url, { width: 240, margin: 2 });
+    } catch {
+      this.qrError = true;
+    }
   }
 
   download(): void {
+    if (this.qrError) return;
     const dataUrl = this.canvasRef.nativeElement.toDataURL('image/png');
     const a = document.createElement('a');
     a.href = dataUrl;
