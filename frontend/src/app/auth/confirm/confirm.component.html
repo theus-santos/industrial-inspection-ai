@@ -1,0 +1,49 @@
+<div style="display:flex;height:100vh;font-family:Roboto,sans-serif;">
+
+  <!-- Left — Navy panel -->
+  <div style="width:45%;background:#0d1b2a;display:flex;flex-direction:column;justify-content:center;align-items:center;padding:48px 40px;text-align:center;">
+    <div style="font-size:64px;margin-bottom:16px;">📧</div>
+    <h1 style="margin:0;color:white;font-size:26px;font-weight:800;line-height:1.2;">Verifique<br>seu email</h1>
+    <p style="color:#64b5f6;font-size:13px;margin:12px 0 0;line-height:1.6;">
+      Enviamos um código de 6 dígitos para<br>
+      <strong style="color:white;">{{ email }}</strong>
+    </p>
+    <div style="margin-top:32px;background:rgba(255,255,255,.06);border-radius:8px;padding:16px 20px;max-width:260px;">
+      <p style="color:#90a4ae;font-size:11px;margin:0;line-height:1.6;">Não recebeu? Verifique a pasta de spam ou clique em "Reenviar código".</p>
+    </div>
+  </div>
+
+  <!-- Right — Code input panel -->
+  <div style="flex:1;background:white;display:flex;align-items:center;justify-content:center;padding:48px;">
+    <div style="width:100%;max-width:380px;">
+      <h2 style="margin:0 0 4px;font-size:24px;font-weight:700;color:#0d1b2a;">Confirmação</h2>
+      <p style="margin:0 0 32px;font-size:14px;color:#78909c;">Digite o código enviado para seu email</p>
+
+      <form [formGroup]="form" (ngSubmit)="submit()" style="display:flex;flex-direction:column;gap:20px;">
+        <mat-form-field appearance="outline" style="width:100%">
+          <mat-label>Código de verificação</mat-label>
+          <input matInput formControlName="code" maxlength="6" inputmode="numeric"
+                 autocomplete="one-time-code"
+                 style="letter-spacing:12px;font-size:22px;text-align:center;font-weight:700;">
+          <mat-error *ngIf="form.get('code')?.hasError('required')">Código obrigatório</mat-error>
+          <mat-error *ngIf="form.get('code')?.hasError('pattern')">Somente 6 dígitos numéricos</mat-error>
+        </mat-form-field>
+
+        <p *ngIf="error" style="color:#c62828;font-size:13px;margin:0;padding:10px 14px;background:#fff5f5;border-radius:6px;border-left:3px solid #f44336;">{{ error }}</p>
+        <p *ngIf="success" style="color:#2e7d32;font-size:13px;margin:0;padding:10px 14px;background:#f1f8e9;border-radius:6px;border-left:3px solid #4caf50;">{{ success }}</p>
+
+        <button mat-raised-button color="primary" type="submit" [disabled]="loading || form.invalid"
+                style="height:48px;font-size:15px;font-weight:600;border-radius:8px;">
+          <mat-spinner diameter="22" *ngIf="loading" style="display:inline-block;margin-right:8px"></mat-spinner>
+          {{ loading ? 'Confirmando...' : 'Confirmar conta' }}
+        </button>
+
+        <button mat-button type="button" (click)="resend()" [disabled]="resending"
+                style="color:#78909c;font-size:13px;">
+          {{ resending ? 'Reenviando...' : 'Reenviar código' }}
+        </button>
+      </form>
+    </div>
+  </div>
+
+</div>
