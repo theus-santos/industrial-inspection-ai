@@ -1,0 +1,78 @@
+<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:24px">
+  <div>
+    <h1 style="margin:0;font-size:22px;font-weight:700;color:#0d1b2a">Equipamentos</h1>
+    <p style="margin:4px 0 0;color:#78909c;font-size:13px" *ngIf="!loading">{{ equipments.length }} cadastrado(s)</p>
+  </div>
+</div>
+
+<!-- Skeleton loading -->
+<div *ngIf="loading" style="background:white;border-radius:8px;box-shadow:0 2px 8px rgba(0,0,0,.08);overflow:hidden">
+  <div *ngFor="let i of [1,2,3]" style="display:flex;align-items:center;padding:16px;border-bottom:1px solid #f5f5f5;gap:12px">
+    <div class="skeleton" style="width:10px;height:10px;border-radius:50%;flex-shrink:0"></div>
+    <div style="flex:1">
+      <div class="skeleton" style="height:13px;width:45%;margin-bottom:6px"></div>
+      <div class="skeleton" style="height:11px;width:30%"></div>
+    </div>
+    <div class="skeleton" style="width:72px;height:22px;border-radius:12px"></div>
+    <div class="skeleton" style="width:90px;height:32px;border-radius:4px"></div>
+  </div>
+</div>
+
+<!-- Empty state -->
+<div *ngIf="!loading && equipments.length === 0"
+     style="text-align:center;color:#78909c;margin-top:64px;display:flex;flex-direction:column;align-items:center;gap:12px">
+  <mat-icon style="font-size:72px;width:72px;height:72px;color:#b0bec5">precision_manufacturing</mat-icon>
+  <p style="font-size:16px;font-weight:500;margin:0">Nenhum equipamento cadastrado</p>
+  <p style="font-size:13px;margin:0">Adicione o primeiro para começar as inspeções</p>
+  <button mat-raised-button color="primary" (click)="newEquipment()" style="margin-top:8px">
+    <mat-icon>add</mat-icon> Novo Equipamento
+  </button>
+</div>
+
+<!-- Equipment list -->
+<div *ngIf="!loading && equipments.length > 0"
+     style="background:white;border-radius:8px;box-shadow:0 2px 8px rgba(0,0,0,.08);overflow:hidden">
+  <div *ngFor="let eq of equipments; let last = last"
+       style="display:flex;align-items:center;padding:14px 16px;gap:12px;cursor:pointer;transition:background .15s"
+       [style.border-bottom]="last ? 'none' : '1px solid #f5f5f5'"
+       (mouseenter)="$event.currentTarget.style.background='#f8f9ff'"
+       (mouseleave)="$event.currentTarget.style.background='white'">
+    <div style="width:10px;height:10px;border-radius:50%;flex-shrink:0;background:#4caf50;box-shadow:0 0 0 3px rgba(76,175,80,.15)"></div>
+    <div style="flex:1;min-width:0">
+      <div style="font-size:13px;font-weight:600;color:#0d1b2a;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ eq.name }}</div>
+      <div style="font-size:11px;color:#90a4ae;margin-top:2px">{{ eq.location }}</div>
+    </div>
+    <span [style.background]="typeColor[eq.type]?.bg"
+          [style.color]="typeColor[eq.type]?.text"
+          style="padding:3px 10px;border-radius:12px;font-size:11px;font-weight:500;white-space:nowrap;flex-shrink:0">
+      {{ typeLabel[eq.type] }}
+    </span>
+    <button mat-raised-button color="primary" (click)="inspect(eq.id)" style="flex-shrink:0;font-size:12px">
+      Inspecionar
+    </button>
+    <button mat-icon-button matTooltip="Histórico" (click)="history(eq.id)" style="flex-shrink:0">
+      <mat-icon style="color:#78909c">history</mat-icon>
+    </button>
+  </div>
+</div>
+
+<!-- FAB -->
+<div *ngIf="!loading && equipments.length > 0" style="display:flex;justify-content:flex-end;margin-top:20px">
+  <button mat-raised-button color="primary" (click)="newEquipment()"
+          style="border-radius:28px;padding:10px 20px;font-weight:600;box-shadow:0 4px 12px rgba(33,150,243,.4)">
+    <mat-icon>add</mat-icon> Novo Equipamento
+  </button>
+</div>
+
+<style>
+  .skeleton {
+    animation: pulse 1.5s ease-in-out infinite;
+    background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+    background-size: 200% 100%;
+  }
+
+  @keyframes pulse {
+    0%, 100% { background-position: 200% 0; }
+    50% { background-position: 0 0; }
+  }
+</style>

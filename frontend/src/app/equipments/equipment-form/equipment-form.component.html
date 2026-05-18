@@ -1,0 +1,35 @@
+<div style="max-width:480px;margin:0 auto">
+  <div style="display:flex;align-items:center;gap:12px;margin-bottom:24px">
+    <button mat-icon-button (click)="cancel()"><mat-icon>arrow_back</mat-icon></button>
+    <h1 style="margin:0;font-size:20px;font-weight:700;color:#0d1b2a">Novo Equipamento</h1>
+  </div>
+  <mat-card style="border-radius:8px">
+    <mat-card-content>
+      <form (ngSubmit)="onSubmit()" style="display:flex;flex-direction:column;gap:16px;padding-top:8px">
+        <mat-form-field appearance="outline">
+          <mat-label>Nome do equipamento</mat-label>
+          <mat-icon matPrefix style="margin-right:8px">precision_manufacturing</mat-icon>
+          <input matInput [(ngModel)]="name" name="name" required />
+        </mat-form-field>
+        <mat-form-field appearance="outline">
+          <mat-label>Tipo</mat-label>
+          <mat-select [(ngModel)]="type" name="type" required>
+            <mat-option *ngFor="let t of types" [value]="t.value">{{ t.label }}</mat-option>
+          </mat-select>
+        </mat-form-field>
+        <mat-form-field appearance="outline">
+          <mat-label>Localização</mat-label>
+          <mat-icon matPrefix style="margin-right:8px">location_on</mat-icon>
+          <input matInput [(ngModel)]="location" name="location" required placeholder="Ex: Setor Norte, Galpão B" />
+        </mat-form-field>
+        <div style="display:flex;gap:8px;justify-content:flex-end;margin-top:4px">
+          <button mat-button type="button" (click)="cancel()">Cancelar</button>
+          <button mat-raised-button color="primary" type="submit" [disabled]="loading || !name || !type || !location">
+            <mat-spinner diameter="18" *ngIf="loading" style="display:inline-block;margin-right:6px"></mat-spinner>
+            <span>{{ loading ? 'Salvando...' : 'Salvar Equipamento' }}</span>
+          </button>
+        </div>
+      </form>
+    </mat-card-content>
+  </mat-card>
+</div>
