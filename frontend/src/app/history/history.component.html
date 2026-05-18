@@ -1,0 +1,51 @@
+<div style="max-width:680px;margin:0 auto">
+  <div style="display:flex;align-items:center;gap:12px;margin-bottom:24px">
+    <button mat-icon-button (click)="back()"><mat-icon>arrow_back</mat-icon></button>
+    <h2 style="margin:0;font-size:20px;font-weight:700;color:#0d1b2a">Histórico de Inspeções</h2>
+  </div>
+
+  <!-- Skeleton -->
+  <div *ngIf="loading" style="background:white;border-radius:8px;box-shadow:0 2px 8px rgba(0,0,0,.08);overflow:hidden">
+    <div *ngFor="let i of [1,2,3]" style="display:flex;align-items:center;padding:16px;border-bottom:1px solid #f5f5f5;gap:12px">
+      <div class="skeleton" style="width:10px;height:10px;border-radius:50%;flex-shrink:0"></div>
+      <div style="flex:1">
+        <div class="skeleton" style="height:13px;width:40%;margin-bottom:6px"></div>
+        <div class="skeleton" style="height:11px;width:25%"></div>
+      </div>
+      <div class="skeleton" style="width:80px;height:22px;border-radius:12px"></div>
+      <div class="skeleton" style="width:100px;height:32px;border-radius:4px"></div>
+    </div>
+  </div>
+
+  <!-- Empty state -->
+  <div *ngIf="!loading && inspections.length === 0"
+       style="text-align:center;color:#78909c;margin:64px 0;display:flex;flex-direction:column;align-items:center;gap:12px">
+    <mat-icon style="font-size:72px;width:72px;height:72px;color:#b0bec5">history</mat-icon>
+    <p style="font-size:16px;font-weight:500;margin:0">Nenhuma inspeção realizada ainda</p>
+  </div>
+
+  <!-- List -->
+  <div *ngIf="!loading && inspections.length > 0"
+       style="background:white;border-radius:8px;box-shadow:0 2px 8px rgba(0,0,0,.08);overflow:hidden">
+    <div *ngFor="let ins of inspections;let last=last"
+         style="display:flex;align-items:center;padding:14px 16px;gap:12px;transition:background .15s"
+         [style.border-bottom]="last ? 'none' : '1px solid #f5f5f5'"
+         (mouseenter)="$event.currentTarget.style.background='#f8f9ff'"
+         (mouseleave)="$event.currentTarget.style.background='white'">
+      <div [style.background]="statusDot[ins.status]"
+           style="width:10px;height:10px;border-radius:50%;flex-shrink:0"></div>
+      <div style="flex:1;min-width:0">
+        <div style="font-size:13px;font-weight:600;color:#0d1b2a">{{ ins.createdAt | date:'dd/MM/yyyy HH:mm' }}</div>
+        <div style="font-size:11px;color:#90a4ae;margin-top:2px">Inspetor: {{ ins.inspector }}</div>
+      </div>
+      <span [style.background]="ins.status === 'open' ? '#fff3e0' : '#e8f5e9'"
+            [style.color]="ins.status === 'open' ? '#e65100' : '#2e7d32'"
+            style="padding:3px 10px;border-radius:12px;font-size:11px;font-weight:500;white-space:nowrap;flex-shrink:0">
+        {{ statusLabel[ins.status] }}
+      </span>
+      <button mat-button color="primary" (click)="viewReport(ins.id)" style="flex-shrink:0;font-size:12px">
+        <mat-icon style="font-size:16px;margin-right:4px">picture_as_pdf</mat-icon> Ver Relatório
+      </button>
+    </div>
+  </div>
+</div>
