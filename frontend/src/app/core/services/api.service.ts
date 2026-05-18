@@ -24,6 +24,10 @@ export class ApiService {
     return this.http.post<Equipment>(`${this.base}/equipments`, body);
   }
 
+  deleteEquipment(id: string): Observable<void> {
+    return this.http.delete<void>(`${this.base}/equipments/${id}`);
+  }
+
   getEquipmentHistory(id: string): Observable<Inspection[]> {
     return this.http.get<Inspection[]>(`${this.base}/equipments/${id}/history`);
   }

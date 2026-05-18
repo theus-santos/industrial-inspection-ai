@@ -48,4 +48,15 @@ export class EquipmentListComponent implements OnInit {
   newEquipment(): void { this.router.navigate(['/equipments/new']); }
   inspect(id: string): void { this.router.navigate(['/equipments', id, 'inspect']); }
   history(id: string): void { this.router.navigate(['/equipments', id, 'history']); }
+
+  deleteEquipment(id: string, name: string): void {
+    if (!confirm(`Excluir "${name}"? Esta ação não pode ser desfeita.`)) return;
+    this.api.deleteEquipment(id).subscribe({
+      next: () => {
+        this.equipments = this.equipments.filter(e => e.id !== id);
+        this.snack.open('Equipamento excluído.', '', { duration: 3000, panelClass: 'snack-success' });
+      },
+      error: () => this.snack.open('Erro ao excluir equipamento.', 'Fechar', { duration: 3000, panelClass: 'snack-error' }),
+    });
+  }
 }
