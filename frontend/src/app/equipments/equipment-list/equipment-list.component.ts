@@ -6,6 +6,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
+import { MatMenuModule } from '@angular/material/menu';
 import { ApiService, Equipment } from '../../core/services/api.service';
 import { ConfirmDialogComponent } from '../../shared/confirm-dialog/confirm-dialog.component';
 
@@ -23,7 +24,7 @@ const TYPE_COLOR: Record<string, { bg: string; text: string }> = {
 @Component({
   selector: 'app-equipment-list',
   standalone: true,
-  imports: [CommonModule, MatButtonModule, MatIconModule, MatSnackBarModule, MatTooltipModule, MatDialogModule],
+  imports: [CommonModule, MatButtonModule, MatIconModule, MatSnackBarModule, MatTooltipModule, MatDialogModule, MatMenuModule],
   templateUrl: './equipment-list.component.html',
 })
 export class EquipmentListComponent implements OnInit {

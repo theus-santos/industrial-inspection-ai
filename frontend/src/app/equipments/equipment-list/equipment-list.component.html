@@ -51,12 +51,25 @@
     <button mat-raised-button color="primary" (click)="inspect(eq.id)" style="flex-shrink:0;font-size:12px">
       Inspecionar
     </button>
-    <button mat-icon-button matTooltip="Histórico" (click)="history(eq.id)" style="flex-shrink:0">
+    <!-- Desktop: botões individuais -->
+    <button mat-icon-button matTooltip="Histórico" (click)="history(eq.id)" style="flex-shrink:0" class="hide-mobile">
       <mat-icon style="color:#78909c">history</mat-icon>
     </button>
-    <button mat-icon-button matTooltip="Excluir" (click)="deleteEquipment(eq.id, eq.name)" style="flex-shrink:0;color:#ef5350">
+    <button mat-icon-button matTooltip="Excluir" (click)="deleteEquipment(eq.id, eq.name)" style="flex-shrink:0;color:#ef5350" class="hide-mobile">
       <mat-icon>delete</mat-icon>
     </button>
+    <!-- Mobile: kebab menu -->
+    <button mat-icon-button [matMenuTriggerFor]="equipMenu" style="flex-shrink:0" class="hide-desktop">
+      <mat-icon style="color:#78909c">more_vert</mat-icon>
+    </button>
+    <mat-menu #equipMenu="matMenu">
+      <button mat-menu-item (click)="history(eq.id)">
+        <mat-icon>history</mat-icon> Histórico
+      </button>
+      <button mat-menu-item (click)="deleteEquipment(eq.id, eq.name)" style="color:#ef5350">
+        <mat-icon style="color:#ef5350">delete</mat-icon> Excluir
+      </button>
+    </mat-menu>
   </div>
 </div>
 
