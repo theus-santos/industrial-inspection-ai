@@ -1,4 +1,4 @@
-import { PutCommand, GetCommand, ScanCommand } from '@aws-sdk/lib-dynamodb';
+import { PutCommand, GetCommand, ScanCommand, DeleteCommand } from '@aws-sdk/lib-dynamodb';
 import { v4 as uuidv4 } from 'uuid';
 import { getDocumentClient } from '../shared/dynamo.client';
 import { Equipment, EquipmentType } from '../shared/types';
@@ -41,5 +41,11 @@ export class EquipmentRepo {
       })
     );
     return (result.Items ?? []).map(({ PK, SK, ...eq }) => eq as Equipment);
+  }
+
+  async delete(id: string): Promise<void> {
+    await getDocumentClient().send(
+      new DeleteCommand({ TableName: this.table, Key: { PK: `EQUIPMENT#${id}`, SK: 'METADATA' } })
+    );
   }
 }

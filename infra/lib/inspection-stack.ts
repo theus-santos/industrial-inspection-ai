@@ -106,7 +106,7 @@ export class InspectionStack extends cdk.Stack {
     const authOptions = { authorizer };
 
     api.addRoutes({ path: '/equipments', methods: [apigwv2.HttpMethod.GET, apigwv2.HttpMethod.POST], integration: new integrations.HttpLambdaIntegration('EquipInt', equipmentFn), ...authOptions });
-    api.addRoutes({ path: '/equipments/{id}', methods: [apigwv2.HttpMethod.GET], integration: new integrations.HttpLambdaIntegration('EquipByIdInt', equipmentFn), ...authOptions });
+    api.addRoutes({ path: '/equipments/{id}', methods: [apigwv2.HttpMethod.GET, apigwv2.HttpMethod.DELETE], integration: new integrations.HttpLambdaIntegration('EquipByIdInt', equipmentFn), ...authOptions });
     api.addRoutes({ path: '/equipments/{id}/history', methods: [apigwv2.HttpMethod.GET], integration: new integrations.HttpLambdaIntegration('EquipHistInt', equipmentFn), ...authOptions });
     api.addRoutes({ path: '/inspections', methods: [apigwv2.HttpMethod.POST], integration: new integrations.HttpLambdaIntegration('InsInt', inspectionFn), ...authOptions });
     api.addRoutes({ path: '/inspections/{id}', methods: [apigwv2.HttpMethod.GET], integration: new integrations.HttpLambdaIntegration('InsByIdInt', inspectionFn), ...authOptions });

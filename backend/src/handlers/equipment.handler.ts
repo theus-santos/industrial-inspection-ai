@@ -17,6 +17,9 @@ export async function handler(event: APIGatewayProxyEventV2): Promise<APIGateway
   try {
     if (method === 'POST') {
       const body = JSON.parse(event.body ?? '{}');
+      if (!body.name || !body.type || !body.location) {
+        return json(400, { message: 'name, type and location are required' });
+      }
       const equipment = await repo.create(body);
       return json(201, equipment);
     }
@@ -36,6 +39,11 @@ export async function handler(event: APIGatewayProxyEventV2): Promise<APIGateway
     if (method === 'GET') {
       const list = await repo.listAll();
       return json(200, list);
+    }
+
+    if (method === 'DELETE' && id) {
+      await repo.delete(id);
+      return json(204, {});
     }
 
     return json(405, { message: 'Method not allowed' });
