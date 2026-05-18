@@ -48,4 +48,11 @@
       </button>
     </div>
   </div>
+
+  <!-- Trend chart -->
+  <div *ngIf="showChart" style="background:white;border-radius:8px;box-shadow:0 2px 8px rgba(0,0,0,.08);padding:16px;margin-top:16px">
+    <h3 style="margin:0 0 12px;font-size:14px;font-weight:600;color:#0d1b2a">Evolução de Defeitos</h3>
+    <p style="margin:0 0 12px;font-size:11px;color:#90a4ae">Cor do ponto: verde=baixo, laranja=médio, vermelho=alto, bordô=crítico</p>
+    <canvas #trendCanvas style="max-height:200px"></canvas>
+  </div>
 </div>
