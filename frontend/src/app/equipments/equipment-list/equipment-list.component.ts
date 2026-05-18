@@ -5,7 +5,9 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { ApiService, Equipment } from '../../core/services/api.service';
+import { ConfirmDialogComponent } from '../../shared/confirm-dialog/confirm-dialog.component';
 
 const TYPE_LABEL: Record<string, string> = {
   maintenance: 'Manutenção', welding: 'Solda',
@@ -21,7 +23,7 @@ const TYPE_COLOR: Record<string, { bg: string; text: string }> = {
 @Component({
   selector: 'app-equipment-list',
   standalone: true,
-  imports: [CommonModule, MatButtonModule, MatIconModule, MatSnackBarModule, MatTooltipModule],
+  imports: [CommonModule, MatButtonModule, MatIconModule, MatSnackBarModule, MatTooltipModule, MatDialogModule],
   templateUrl: './equipment-list.component.html',
 })
 export class EquipmentListComponent implements OnInit {
@@ -31,7 +33,7 @@ export class EquipmentListComponent implements OnInit {
   typeColor = TYPE_COLOR;
   hoveredEquipmentId: string | null = null;
 
-  constructor(private api: ApiService, private router: Router, private snack: MatSnackBar) {}
+  constructor(private api: ApiService, private router: Router, private snack: MatSnackBar, private dialog: MatDialog) {}
 
   ngOnInit(): void {
     this.api.getEquipments().subscribe({
@@ -50,13 +52,19 @@ export class EquipmentListComponent implements OnInit {
   history(id: string): void { this.router.navigate(['/equipments', id, 'history']); }
 
   deleteEquipment(id: string, name: string): void {
-    if (!confirm(`Excluir "${name}"? Esta ação não pode ser desfeita.`)) return;
-    this.api.deleteEquipment(id).subscribe({
-      next: () => {
-        this.equipments = this.equipments.filter(e => e.id !== id);
-        this.snack.open('Equipamento excluído.', '', { duration: 3000, panelClass: 'snack-success' });
-      },
-      error: () => this.snack.open('Erro ao excluir equipamento.', 'Fechar', { duration: 3000, panelClass: 'snack-error' }),
+    const ref = this.dialog.open(ConfirmDialogComponent, {
+      width: '400px',
+      data: { title: `Excluir "${name}"?`, message: 'Esta ação não pode ser desfeita.' },
+    });
+    ref.afterClosed().subscribe(confirmed => {
+      if (!confirmed) return;
+      this.api.deleteEquipment(id).subscribe({
+        next: () => {
+          this.equipments = this.equipments.filter(e => e.id !== id);
+          this.snack.open('Equipamento excluído.', '', { duration: 3000, panelClass: 'snack-success' });
+        },
+        error: () => this.snack.open('Erro ao excluir equipamento.', 'Fechar', { duration: 3000, panelClass: 'snack-error' }),
+      });
     });
   }
 }
