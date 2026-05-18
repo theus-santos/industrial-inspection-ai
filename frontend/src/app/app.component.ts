@@ -22,6 +22,7 @@ export class AppComponent implements OnInit, OnDestroy {
   userInitials = 'US';
   isMobile = false;
   private bpSub?: Subscription;
+  private routerSub?: Subscription;
 
   constructor(
     public auth: AuthService,
@@ -34,12 +35,12 @@ export class AppComponent implements OnInit, OnDestroy {
     this.bpSub = this.bp.observe(Breakpoints.Handset).subscribe(r => {
       this.isMobile = r.matches;
     });
-    this.router.events.pipe(filter(e => e instanceof NavigationEnd)).subscribe((e: any) => {
+    this.routerSub = this.router.events.pipe(filter(e => e instanceof NavigationEnd)).subscribe((e: any) => {
       this.activeRoute = e.urlAfterRedirects;
     });
   }
 
-  ngOnDestroy(): void { this.bpSub?.unsubscribe(); }
+  ngOnDestroy(): void { this.bpSub?.unsubscribe(); this.routerSub?.unsubscribe(); }
 
   isActive(path: string): boolean { return this.activeRoute.startsWith(path); }
   navigate(path: string): void { this.router.navigate([path]); }
