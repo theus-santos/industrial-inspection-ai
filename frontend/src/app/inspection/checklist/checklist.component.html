@@ -1,0 +1,47 @@
+<div style="max-width:640px;margin:0 auto">
+  <mat-stepper [linear]="true" [selectedIndex]="1" style="background:transparent;margin-bottom:24px">
+    <mat-step label="Criar" state="done"></mat-step>
+    <mat-step label="Checklist" state="edit"></mat-step>
+    <mat-step label="Fotos"></mat-step>
+    <mat-step label="Relatório"></mat-step>
+  </mat-stepper>
+
+  <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:16px">
+    <h2 style="margin:0;font-size:18px;font-weight:700;color:#0d1b2a">Checklist de Inspeção</h2>
+    <span *ngIf="!loading" style="font-size:12px;color:#78909c">{{ checkedCount }}/{{ checklist.length }} itens</span>
+  </div>
+
+  <!-- Skeleton -->
+  <div *ngIf="loading">
+    <div *ngFor="let i of [1,2]" style="background:white;border-radius:8px;padding:16px;margin-bottom:12px;box-shadow:0 2px 8px rgba(0,0,0,.08)">
+      <div class="skeleton" style="height:14px;width:35%;margin-bottom:12px"></div>
+      <div *ngFor="let j of [1,2,3]" style="margin-bottom:10px;display:flex;align-items:center;gap:10px">
+        <div class="skeleton" style="width:18px;height:18px;border-radius:3px;flex-shrink:0"></div>
+        <div class="skeleton" style="height:12px;flex:1"></div>
+      </div>
+    </div>
+  </div>
+
+  <mat-card *ngFor="let cat of categories" style="margin-bottom:12px;border-radius:8px">
+    <mat-card-header style="padding-bottom:0">
+      <mat-card-title style="font-size:14px;font-weight:600;color:#0d1b2a">{{ cat }}</mat-card-title>
+    </mat-card-header>
+    <mat-card-content style="padding-top:8px">
+      <div *ngFor="let item of itemsByCategory(cat);let last=last">
+        <div style="padding:10px 0;display:flex;align-items:center">
+          <mat-checkbox [(ngModel)]="item.checked" [name]="item.id" style="flex:1">
+            <span [style.color]="item.checked ? '#2196f3' : '#333'" style="font-size:13px">{{ item.label }}</span>
+          </mat-checkbox>
+        </div>
+        <mat-divider *ngIf="!last"></mat-divider>
+      </div>
+    </mat-card-content>
+  </mat-card>
+
+  <div style="display:flex;justify-content:flex-end;gap:8px;margin-top:16px">
+    <button mat-raised-button color="primary" (click)="saveAndContinue()" [disabled]="saving || loading">
+      <mat-spinner diameter="18" *ngIf="saving" style="display:inline-block;margin-right:6px"></mat-spinner>
+      <span>{{ saving ? 'Salvando...' : 'Salvar e Continuar →' }}</span>
+    </button>
+  </div>
+</div>

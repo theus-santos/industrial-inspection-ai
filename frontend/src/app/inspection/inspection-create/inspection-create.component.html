@@ -1,0 +1,35 @@
+<div style="max-width:600px;margin:0 auto">
+  <mat-stepper [linear]="true" [selectedIndex]="0" style="background:transparent;margin-bottom:24px">
+    <mat-step label="Criar" state="edit"></mat-step>
+    <mat-step label="Checklist"></mat-step>
+    <mat-step label="Fotos"></mat-step>
+    <mat-step label="Relatório"></mat-step>
+  </mat-stepper>
+
+  <mat-card style="border-radius:8px">
+    <mat-card-header style="padding-bottom:0">
+      <mat-card-title style="font-size:18px;color:#0d1b2a">Nova Inspeção</mat-card-title>
+      <mat-card-subtitle *ngIf="equipment">{{ equipment.name }} — {{ equipment.location }}</mat-card-subtitle>
+    </mat-card-header>
+    <mat-card-content>
+      <form (ngSubmit)="onSubmit()" style="display:flex;flex-direction:column;gap:16px;margin-top:16px">
+        <mat-form-field appearance="outline">
+          <mat-label>Nome do inspetor</mat-label>
+          <mat-icon matPrefix style="margin-right:8px">person</mat-icon>
+          <input matInput [(ngModel)]="inspector" name="inspector" required />
+        </mat-form-field>
+        <mat-form-field appearance="outline">
+          <mat-label>Observações iniciais</mat-label>
+          <textarea matInput [(ngModel)]="notes" name="notes" rows="3" placeholder="Condições do equipamento, contexto..."></textarea>
+        </mat-form-field>
+        <div style="display:flex;gap:8px;justify-content:flex-end;margin-top:4px">
+          <button mat-button type="button" (click)="cancel()">Cancelar</button>
+          <button mat-raised-button color="primary" type="submit" [disabled]="loading || !inspector">
+            <mat-spinner diameter="18" *ngIf="loading" style="display:inline-block;margin-right:6px"></mat-spinner>
+            <span>{{ loading ? 'Criando...' : 'Iniciar Inspeção →' }}</span>
+          </button>
+        </div>
+      </form>
+    </mat-card-content>
+  </mat-card>
+</div>
