@@ -177,7 +177,7 @@ export class PdfService {
     return Promise.all(
       photosWithUrls.map(async ({ url }, idx) => {
         try {
-          const response = await fetch(url);
+          const response = await fetch(url, { signal: AbortSignal.timeout(10_000) });
           const mimeType = response.headers.get('content-type') ?? 'image/jpeg';
           const buffer = await response.arrayBuffer();
           return { idx, data: Buffer.from(buffer).toString('base64'), mimeType };

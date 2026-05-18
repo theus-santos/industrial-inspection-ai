@@ -44,7 +44,7 @@ export async function handler(event: APIGatewayProxyEventV2): Promise<APIGateway
         const url = await getSignedUrl(
           getS3Client(),
           new GetObjectCommand({ Bucket: PHOTOS_BUCKET, Key: photo.s3Key }),
-          { expiresIn: 120 },
+          { expiresIn: 3600 },
         );
         return {
           photo,
