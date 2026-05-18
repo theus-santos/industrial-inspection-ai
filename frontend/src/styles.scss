@@ -1,9 +1,54 @@
-/* You can add global styles to this file, and also import other style files */
+@use '@angular/material' as mat;
 
-html, body { height: 100%; }
-body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+@include mat.core();
 
-.login-container { display: flex; justify-content: center; align-items: center; height: 100vh; background: #f5f5f5; }
+$primary: mat.define-palette(mat.$blue-palette, 500);
+$accent: mat.define-palette(mat.$blue-grey-palette, 900);
+$warn: mat.define-palette(mat.$red-palette);
+$theme: mat.define-light-theme((color: (primary: $primary, accent: $accent, warn: $warn)));
+
+@include mat.all-component-themes($theme);
+
+* { box-sizing: border-box; }
+body { margin: 0; font-family: Roboto, sans-serif; background: #f5f7fa; }
+
+.mat-drawer-container { background: #f5f7fa !important; }
+
+.snack-success .mdc-snackbar__surface { background: #2e7d32 !important; }
+.snack-error   .mdc-snackbar__surface { background: #c62828 !important; }
+
+.login-container { display: flex; justify-content: center; align-items: center; height: 100vh; background: #f5f7fa; }
 .login-card { width: 400px; padding: 24px; }
 .full-width { width: 100%; margin-bottom: 16px; }
-.error { color: #c62828; font-size: 14px; margin-bottom: 8px; }
+.error-text { color: #c62828; font-size: 14px; margin-bottom: 8px; }
+
+@keyframes shimmer {
+  0%   { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+.skeleton {
+  background: linear-gradient(90deg, #eee 25%, #f5f5f5 50%, #eee 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+  border-radius: 4px;
+}
+
+.nav-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 16px;
+  cursor: pointer;
+  border-left: 3px solid transparent;
+  transition: background .15s;
+}
+.nav-item .nav-icon { color: #78909c; font-size: 20px; width: 20px; height: 20px; }
+.nav-item .nav-label { color: #78909c; font-size: 13px; }
+.nav-item:hover { background: rgba(255,255,255,.05); }
+
+.nav-active {
+  background: rgba(33,150,243,.12) !important;
+  border-left-color: #2196f3 !important;
+}
+.nav-active .nav-icon { color: #64b5f6 !important; }
+.nav-active .nav-label { color: #64b5f6 !important; }
