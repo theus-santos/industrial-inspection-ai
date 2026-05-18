@@ -36,8 +36,8 @@ export class EquipmentRepo {
     const result = await getDocumentClient().send(
       new ScanCommand({
         TableName: this.table,
-        FilterExpression: 'SK = :sk',
-        ExpressionAttributeValues: { ':sk': 'METADATA' },
+        FilterExpression: 'begins_with(PK, :prefix) AND SK = :sk',
+        ExpressionAttributeValues: { ':prefix': 'EQUIPMENT#', ':sk': 'METADATA' },
       })
     );
     return (result.Items ?? []).map(({ PK, SK, ...eq }) => eq as Equipment);
