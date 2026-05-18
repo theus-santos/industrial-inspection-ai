@@ -91,7 +91,7 @@ export class PhotosComponent {
 
   private async uploadAndAnalyze(entry: PhotoEntry): Promise<void> {
     try {
-      const response = await firstValueFrom(this.api.getPresignedUrl(this.inspectionId));
+      const response = await firstValueFrom(this.api.getPresignedUrl(this.inspectionId, entry.file.type || 'image/jpeg'));
       entry.photoId = response.photoId;
       await firstValueFrom(
         this.http.put(response.uploadUrl, entry.file, {

@@ -44,8 +44,8 @@ export class ApiService {
     return this.http.put<{ message: string }>(`${this.base}/inspections/${inspectionId}/checklist`, { items });
   }
 
-  getPresignedUrl(inspectionId: string): Observable<PresignedUrlResponse> {
-    return this.http.get<PresignedUrlResponse>(`${this.base}/photos/presigned-url`, { params: { inspectionId } });
+  getPresignedUrl(inspectionId: string, contentType: string): Observable<PresignedUrlResponse> {
+    return this.http.get<PresignedUrlResponse>(`${this.base}/photos/presigned-url`, { params: { inspectionId, contentType } });
   }
 
   analyzePhoto(photoId: string, inspectionId: string): Observable<DefectAnalysis> {
